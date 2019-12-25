@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.8.3
-Release:        4
+Release:        5
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            https://www.libssh.org
@@ -9,6 +9,8 @@ Source1:        https://www.libssh.org/files/0.8/%{name}-%{version}.tar.xz.asc
 Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D.gpg#/%{name}.keyring 
 
 Patch1:         libssh-0.8.3-fix-covscan-errors.patch
+Patch2:         libssh-0.8.3-fixes-the-oss-fuzz-bug.patch
+
 #patches6000-patches6007 come from https://git.libssh.org/
 Patch6000:      libssh-stable-0p8-CVE-2018-10933-part1.patch
 Patch6001:	libssh-stable-0p8-CVE-2018-10933-part2.patch
@@ -100,5 +102,11 @@ popd
 %doc README ChangeLog obj/doc/html
 
 %changelog
+* Sat Dec 21 2019 openEuler Buildteam <buildteam@openeuler.org> - 0.8.3-5
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC: fixes the oss fuzz bug
+
 * Thu Sep 12 2019 openEuler Buildteam <buildteam@openeuler.org> - 0.8.3-4
 - Package init
