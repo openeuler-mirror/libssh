@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.8.3
-Release:        6
+Release:        7
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            https://www.libssh.org
@@ -107,6 +107,12 @@ popd
 %doc README ChangeLog obj/doc/html
 
 %changelog
+* Sun Jan 12 2020 openEuler Buildteam <buildteam@openeuler.org> - 0.8.3-7
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:bugfix in build process
+
 * Sun Jan 12 2020 openEuler Buildteam <buildteam@openeuler.org> - 0.8.3-6
 - Type:bugfix
 - Id:NA
