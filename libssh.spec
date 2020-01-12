@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.8.3
-Release:        5
+Release:        6
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            https://www.libssh.org
@@ -20,6 +20,11 @@ Patch6004:	libssh-stable-0p8-CVE-2018-10933-part5.patch
 Patch6005:	libssh-stable-0p8-CVE-2018-10933-part6.patch
 Patch6006:	libssh-stable-0p8-CVE-2018-10933-part7.patch
 Patch6007:	libssh-stable-0p8-CVE-2018-10933-part8.patch
+Patch6008:      0001-CVE-2019-14889.patch
+Patch6009:      0002-CVE-2019-14889.patch
+Patch6010:      0003-CVE-2019-14889.patch
+Patch6011:      0004-CVE-2019-14889.patch
+Patch6012:      0005-CVE-2019-14889.patch
 
 BuildRequires:  cmake libcmocka-devel krb5-devel zlib-devel pkgconfig
 BuildRequires:  doxygen gcc-c++ gnupg2 openssl-devel
@@ -102,6 +107,12 @@ popd
 %doc README ChangeLog obj/doc/html
 
 %changelog
+* Sun Jan 12 2020 openEuler Buildteam <buildteam@openeuler.org> - 0.8.3-6
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC: fixes cves
+
 * Sat Dec 21 2019 openEuler Buildteam <buildteam@openeuler.org> - 0.8.3-5
 - Type:bugfix
 - Id:NA
