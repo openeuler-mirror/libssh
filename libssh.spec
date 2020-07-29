@@ -13,7 +13,7 @@ Patch1:         libssh-0.9.4-fix-version.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
-BuildRequires:  nmap-ncat
+BuildRequires:  nmap-ncat libssh
 
 Recommends:     crypto-policies
 
@@ -69,6 +69,7 @@ do
     ln -s "${_target}" "${_link_name}"
 done;
 popd
+cp -p %{_libdir}/{libssh,libssh_threads}.so.4.7.0 %{buildroot}%{_libdir}/
 
 %ldconfig_scriptlets
 
