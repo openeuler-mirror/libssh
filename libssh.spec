@@ -1,34 +1,21 @@
 Name:           libssh
-Version:        0.8.3
-Release:        8
+Version:        0.9.4
+Release:        1
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
-URL:            https://www.libssh.org
-Source0:        https://www.libssh.org/files/0.8/%{name}-%{version}.tar.xz
-Source1:        https://www.libssh.org/files/0.8/%{name}-%{version}.tar.xz.asc
-Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D.gpg#/%{name}.keyring 
+URL:            http://www.libssh.org
 
-Patch1:         libssh-0.8.3-fix-covscan-errors.patch
-Patch2:         libssh-0.8.3-fixes-the-oss-fuzz-bug.patch
+Source0:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz
+Source1:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz.asc
+Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D.gpg#/%{name}.keyring
 
-#patches6000-patches6007 come from https://git.libssh.org/
-Patch6000:      libssh-stable-0p8-CVE-2018-10933-part1.patch
-Patch6001:	libssh-stable-0p8-CVE-2018-10933-part2.patch
-Patch6002:	libssh-stable-0p8-CVE-2018-10933-part3.patch
-Patch6003:	libssh-stable-0p8-CVE-2018-10933-part4.patch
-Patch6004:	libssh-stable-0p8-CVE-2018-10933-part5.patch
-Patch6005:	libssh-stable-0p8-CVE-2018-10933-part6.patch
-Patch6006:	libssh-stable-0p8-CVE-2018-10933-part7.patch
-Patch6007:	libssh-stable-0p8-CVE-2018-10933-part8.patch
-Patch6008:      0001-CVE-2019-14889.patch
-Patch6009:      0002-CVE-2019-14889.patch
-Patch6010:      0003-CVE-2019-14889.patch
-Patch6011:      0004-CVE-2019-14889.patch
-Patch6012:      0005-CVE-2019-14889.patch
-Patch6013:      CVE-2020-1730.patch
+Patch1:         libssh-0.9.4-fix-version.patch
 
-BuildRequires:  cmake libcmocka-devel krb5-devel zlib-devel pkgconfig
-BuildRequires:  doxygen gcc-c++ gnupg2 openssl-devel
+BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
+BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
+BuildRequires:  nmap-ncat libssh
+
+Recommends:     crypto-policies
 
 Provides: libssh_threads.so.4()(64bit)
 
@@ -61,15 +48,15 @@ fi
 pushd obj
 
 %cmake .. \
-    -DUNIT_TESTING=ON
+    -DUNIT_TESTING=ON \
 
 %make_build VERBOSE=1
-make docs
 
 popd
 
 %install
 make DESTDIR=%{buildroot} install/fast -C obj
+install -d -m755 %{buildroot}%{_sysconfdir}/libssh
 
 pushd %{buildroot}%{_libdir}
 for i in libssh.so*;
@@ -82,6 +69,7 @@ do
     ln -s "${_target}" "${_link_name}"
 done;
 popd
+cp -p %{_libdir}/{libssh,libssh_threads}.so.4.7.0 %{buildroot}%{_libdir}/
 
 %ldconfig_scriptlets
 
@@ -100,19 +88,19 @@ popd
 %defattr(-,root,root)
 %{_includedir}/libssh/
 %{_libdir}/cmake/libssh/
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libssh.pc
 %{_libdir}/*.so
 
 %files help
 %defattr(-,root,root)
-%doc README ChangeLog obj/doc/html
+%doc ChangeLog README
 
 %changelog
-* Fri Apr 17 2020 openEuler Buildteam <buildteam@openeuler.org> - 0.8.3-8
-- Type:cves
-- ID:CVE-2020-1730
+* Mon Apr 20 2020 openEuler Buildteam <buildteam@openeuler.org> - 0.9.4-1
+- Type:bugfix
+- Id:NA
 - SUG:NA
-- DESC:fix CVE-2020-1730
+- DESC:update to 0.9.4
 
 * Sun Jan 12 2020 openEuler Buildteam <buildteam@openeuler.org> - 0.8.3-7
 - Type:bugfix
