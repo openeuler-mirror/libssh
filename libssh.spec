@@ -1,6 +1,6 @@
 Name:           libssh
-Version:        0.9.4
-Release:        2
+Version:        0.9.5
+Release:        1
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -8,12 +8,6 @@ URL:            http://www.libssh.org
 Source0:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz
 Source1:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz.asc
 Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D.gpg#/%{name}.keyring
-
-Patch1:         libssh-0.9.4-fix-version.patch
-Patch2:         CVE-2020-16135-1.patch
-Patch3:         CVE-2020-16135-2.patch
-Patch4:         CVE-2020-16135-3.patch
-Patch5:         CVE-2020-16135-4.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -100,6 +94,12 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Fri Jan 29 2021 xihaochen <xihaochen@huawei.com> - 0.9.5-1
+- Type:requirements                                                                                                                                            
+- Id:NA
+- SUG:NA
+- DESC:update libssh to 0.9.5
+
 * Thu Aug 6 2020 zhaowei <zhaowei23@huawei.com> - 0.9.4-2
 - Type:CVE
 - Id:CVE-2020-16135
