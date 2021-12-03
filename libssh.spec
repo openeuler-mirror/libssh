@@ -1,5 +1,5 @@
 Name:           libssh
-Version:        0.9.5
+Version:        0.9.6
 Release:        1
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
@@ -94,6 +94,12 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Fri Dec 03 2021 gaihuiying <gaihuiying1@huawei.com> - 0.9.6-1
+- Type:requirement
+- Id:NA
+- SUG:NA
+- DESC:update libssh to 0.9.6
+
 * Fri Jan 29 2021 xihaochen <xihaochen@huawei.com> - 0.9.5-1
 - Type:requirements                                                                                                                                            
 - Id:NA
