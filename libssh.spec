@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.6
-Release:        1
+Release:        2
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -11,7 +11,7 @@ Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
-BuildRequires:  nmap-ncat libssh
+BuildRequires:  nmap-ncat
 
 Recommends:     crypto-policies
 
@@ -67,7 +67,6 @@ do
     ln -s "${_target}" "${_link_name}"
 done;
 popd
-cp -p %{_libdir}/{libssh,libssh_threads}.so.4.7.0 %{buildroot}%{_libdir}/
 
 %ldconfig_scriptlets
 
@@ -94,6 +93,12 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Wed Mar 16 2022 xihaochen <xihaochen@h-partners.com> - 0.9.6-2
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:remove obsolete lib
+
 * Fri Dec 03 2021 gaihuiying <gaihuiying1@huawei.com> - 0.9.6-1
 - Type:requirement
 - Id:NA
