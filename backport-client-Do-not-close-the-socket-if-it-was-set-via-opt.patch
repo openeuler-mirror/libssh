@@ -1,0 +1,32 @@
+From 4b20d7ad1882feafb28e4371cd7c7c1c9c499153 Mon Sep 17 00:00:00 2001
+From: Andreas Schneider <asn@cryptomilk.org>
+Date: Tue, 19 Apr 2022 16:22:12 +0200
+Subject: [PATCH] client: Do not close the socket if it was set via options
+
+Fixes #122
+
+Signed-off-by: Andreas Schneider <asn@cryptomilk.org>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+---
+ src/client.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/client.c b/src/client.c
+index 4e2a299d..a41764f1 100644
+--- a/src/client.c
++++ b/src/client.c
+@@ -720,7 +720,10 @@ ssh_disconnect(ssh_session session)
+     }
+ 
+     ssh_packet_send(session);
+-    ssh_socket_close(session->socket);
++    /* Do not close the socket, if the fd was set via options. */
++    if (session->opts.fd == SSH_INVALID_SOCKET) {
++        ssh_socket_close(session->socket);
++    }
+   }
+ error:
+   session->recv_seq = 0;
+-- 
+2.33.0
+

@@ -1,0 +1,29 @@
+From 332f1c2e093de27e7fcfe22d80f0660c57e002eb Mon Sep 17 00:00:00 2001
+From: tatataeki <shengzeyu19_98@163.com>
+Date: Wed, 29 Jun 2022 14:20:48 +0800
+Subject: [PATCH] sftp: fix the length calculation of packet in sftp_write
+
+Signed-off-by: tatataeki <shengzeyu19_98@163.com>
+Reviewed-by: Andreas Schneider <asn@cryptomilk.org>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+---
+ src/sftp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/sftp.c b/src/sftp.c
+index b1fa931e..e01012a8 100644
+--- a/src/sftp.c
++++ b/src/sftp.c
+@@ -2178,8 +2178,8 @@ ssize_t sftp_write(sftp_file file, const void *buf, size_t count) {
+     sftp_set_error(sftp, SSH_FX_FAILURE);
+     return -1;
+   }
+-  packetlen=ssh_buffer_get_len(buffer);
+   len = sftp_packet_write(file->sftp, SSH_FXP_WRITE, buffer);
++  packetlen=ssh_buffer_get_len(buffer);
+   SSH_BUFFER_FREE(buffer);
+   if (len < 0) {
+     return -1;
+-- 
+2.33.0
+
