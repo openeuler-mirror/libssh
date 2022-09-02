@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.6
-Release:        2
+Release:        3
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -8,6 +8,12 @@ URL:            http://www.libssh.org
 Source0:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz
 Source1:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz.asc
 Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D.gpg#/%{name}.keyring
+
+Patch0:         backport-Add-errno-reset-with-strtoul-call.patch
+Patch1:         backport-auth-Fix-error-returned-in-ssh_userauth_try_publicke.patch
+Patch2:         backport-client-Do-not-close-the-socket-if-it-was-set-via-opt.patch
+Patch3:         backport-libsshpp-Fix-openForward-to-not-set-sourcehost-to-NU.patch
+Patch4:         backport-sftp-fix-the-length-calculation-of-packet-in-sftp_wr.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -93,6 +99,16 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Fri Sep 02 2022 zengweifeng <zwfeng@huawei.com> - 0.9.6-3
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:add errno while reset with strtoul call
+       fix error returned in ssh_userauth_try_publicke
+       client do not close the socket if it was set via opt
+       fix openForward to not set sourcehost to NULL
+       fix the length calculation of packet in sftp_write
+
 * Wed Mar 16 2022 xihaochen <xihaochen@h-partners.com> - 0.9.6-2
 - Type:bugfix
 - Id:NA
