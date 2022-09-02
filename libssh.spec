@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.4
-Release:        5
+Release:        6
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -14,7 +14,12 @@ Patch2:         CVE-2020-16135-1.patch
 Patch3:         CVE-2020-16135-2.patch
 Patch4:         CVE-2020-16135-3.patch
 Patch5:         CVE-2020-16135-4.patch
-Patch6000:      CVE-2021-3634.patch
+Patch6:         CVE-2021-3634.patch
+Patch7:         backport-Add-errno-reset-with-strtoul-call.patch
+Patch8:         backport-auth-Fix-error-returned-in-ssh_userauth_try_publicke.patch
+Patch9:         backport-client-Do-not-close-the-socket-if-it-was-set-via-opt.patch
+Patch10:        backport-libsshpp-Fix-openForward-to-not-set-sourcehost-to-NU.patch
+Patch11:        backport-sftp-fix-the-length-calculation-of-packet-in-sftp_wr.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -99,6 +104,17 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Fri Sep 02 2022 gaihuiying <eaglegai@163.com> - 0.9.4-6
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:backport upstream patches:
+       add errno while reset with strtoul call
+       fix error returned in ssh_userauth_try_publicke
+       client do not close the socket if it was set via opt
+       fix openForward to not set sourcehost to NULL
+       fix the length calculation of packet in sftp_write
+
 * Mon Sep 13 2021 heyaohua<heyaohua1@huawei.com> - 0.9.4-5
 - Type:CVE
 - CVE:CVE-2021-3634
