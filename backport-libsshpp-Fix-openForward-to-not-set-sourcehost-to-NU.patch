@@ -1,0 +1,32 @@
+From a889527c1b8f9831b47ceac510057585cdc81d39 Mon Sep 17 00:00:00 2001
+From: Andreas Schneider <asn@cryptomilk.org>
+Date: Wed, 15 Jun 2022 15:10:08 +0200
+Subject: [PATCH] libsshpp: Fix openForward to not set sourcehost to NULL by
+ default
+
+This parameter is required.
+
+Fixes #25
+
+Signed-off-by: Andreas Schneider <asn@cryptomilk.org>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+---
+ include/libssh/libsshpp.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/libssh/libsshpp.hpp b/include/libssh/libsshpp.hpp
+index a678d375..602c7aec 100644
+--- a/include/libssh/libsshpp.hpp
++++ b/include/libssh/libsshpp.hpp
+@@ -523,7 +523,7 @@ public:
+     return ssh_channel_is_open(channel) != 0;
+   }
+   int openForward(const char *remotehost, int remoteport,
+-      const char *sourcehost=NULL, int localport=0){
++      const char *sourcehost, int localport=0){
+     int err=ssh_channel_open_forward(channel,remotehost,remoteport,
+         sourcehost, localport);
+     ssh_throw(err);
+-- 
+2.33.0
+
