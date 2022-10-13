@@ -1,0 +1,33 @@
+From bb5f7e2707c1d04cd080bc64ff748ec89cf614fa Mon Sep 17 00:00:00 2001
+From: Norbert Pocs <npocs@redhat.com>
+Date: Mon, 4 Jul 2022 13:58:06 +0200
+Subject: options: Parse hostname by last '@'
+
+The login name can have '@' char in it
+
+Signed-off-by: Norbert Pocs <npocs@redhat.com>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+Reviewed-by: Andreas Schneider <asn@cryptomilk.org>
+
+Conflict:NA
+Reference:https://git.libssh.org/projects/libssh.git/patch/?id=bb5f7e2707c1d04cd080bc64ff748ec89cf614fa
+---
+ src/options.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/options.c b/src/options.c
+index e4c80f8..9c2ac29 100644
+--- a/src/options.c
++++ b/src/options.c
+@@ -495,7 +495,7 @@ int ssh_options_set(ssh_session session, enum ssh_options_e type,
+                     ssh_set_error_oom(session);
+                     return -1;
+                 }
+-                p = strchr(q, '@');
++                p = strrchr(q, '@');
+ 
+                 SAFE_FREE(session->opts.host);
+ 
+-- 
+2.33.0
+
