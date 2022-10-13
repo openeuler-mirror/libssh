@@ -1,0 +1,37 @@
+From 964df4dc290c631fe2ece74600e510ca6c0a7385 Mon Sep 17 00:00:00 2001
+From: Norbert Pocs <npocs@redhat.com>
+Date: Mon, 11 Jul 2022 12:34:34 +0200
+Subject: torture_options: Add test for '@' in login name
+
+Signed-off-by: Norbert Pocs <npocs@redhat.com>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+Reviewed-by: Andreas Schneider <asn@cryptomilk.org>
+
+Conflict:NA
+Reference:https://git.libssh.org/projects/libssh.git/commit?id=964df4dc290c631fe2ece74600e510ca6c0a7385
+
+---
+ tests/unittests/torture_options.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/tests/unittests/torture_options.c b/tests/unittests/torture_options.c
+index d0fdaed..6bfd091 100644
+--- a/tests/unittests/torture_options.c
++++ b/tests/unittests/torture_options.c
+@@ -65,6 +65,13 @@ static void torture_options_set_host(void **state) {
+     assert_string_equal(session->opts.host, "meditation");
+     assert_non_null(session->opts.username);
+     assert_string_equal(session->opts.username, "guru");
++
++    rc = ssh_options_set(session, SSH_OPTIONS_HOST, "at@login@hostname");
++    assert_true(rc == 0);
++    assert_non_null(session->opts.host);
++    assert_string_equal(session->opts.host, "hostname");
++    assert_non_null(session->opts.username);
++    assert_string_equal(session->opts.username, "at@login");
+ }
+ 
+ static void torture_options_set_ciphers(void **state) {
+-- 
+2.33.0
+

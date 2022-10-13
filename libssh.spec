@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.6
-Release:        3
+Release:        4
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -14,6 +14,10 @@ Patch1:         backport-client-Do-not-close-the-socket-if-it-was-set-via-opt.pa
 Patch2:         backport-libsshpp-Fix-openForward-to-not-set-sourcehost-to-NU.patch
 Patch3:         backport-auth-Fix-error-returned-in-ssh_userauth_try_publicke.patch
 Patch4:         backport-sftp-fix-the-length-calculation-of-packet-in-sftp_wr.patch
+Patch5:         backport-options-Parse-hostname-by-last.patch
+Patch6:         backport-torture_options-Add-test-for-in-login-name.patch
+Patch7:         backport-session-Initialize-pointers.patch
+Patch8:         backport-tests-Ensure-the-mode-of-the-created-file-is.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -99,6 +103,15 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Thu Oct 13 2022 xinghe <xinghe2@h-partners.com> - 0.9.6-4
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:options: Parse hostname by last '@'
+       torture_options: Add test for '@' in login name
+       session: Initialize pointers
+       tests: Ensure the mode of the created file is what we set
+
 * Fri Sep 02 2022 gaihuiying <eaglegai@163.com> - 0.9.6-3
 - Type:bugfix
 - Id:NA
