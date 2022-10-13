@@ -1,0 +1,57 @@
+From 1286a70e139fb7553dce02107cdcdf36edcf53f1 Mon Sep 17 00:00:00 2001
+From: renmingshuai <renmingshuai@huawei.com>
+Date: Fri, 5 Aug 2022 17:08:30 +0800
+Subject: tests: Ensure the mode of the created file is ...
+
+what we set in open funtion by the argument mode. The mode of the
+created file
+is (mode & ~umask), So we set umask to typical default value(octal 022).
+
+Signed-off-by: renmingshuai <renmingshuai@huawei.com>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+Reviewed-by: Andreas Schneider <asn@cryptomilk.org>
+
+Conflict:NA
+Reference:https://git.libssh.org/projects/libssh.git/patch/?id=1286a70e139fb7553dce02107cdcdf36edcf53f1
+
+---
+ tests/client/torture_scp.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/tests/client/torture_scp.c b/tests/client/torture_scp.c
+index 59a00ba..fe3f239 100644
+--- a/tests/client/torture_scp.c
++++ b/tests/client/torture_scp.c
+@@ -39,6 +39,9 @@
+ #define TEMPLATE BINARYDIR "/tests/home/alice/temp_dir_XXXXXX"
+ #define ALICE_HOME BINARYDIR "/tests/home/alice"
+ 
++/* store the original umask */
++mode_t old;
++
+ struct scp_st {
+     struct torture_state *s;
+     char *tmp_dir;
+@@ -99,6 +102,9 @@ static int session_setup(void **state)
+ 
+     s = ts->s;
+ 
++    /* store the original umask and set a new one */
++    old = umask(0022);
++
+     /* Create temporary directory for alice */
+     tmp_dir = torture_make_temp_dir(TEMPLATE);
+     assert_non_null(tmp_dir);
+@@ -135,6 +141,9 @@ static int session_teardown(void **state)
+     assert_non_null(ts->s);
+     s = ts->s;
+ 
++    /* restore the umask */
++    umask(old);
++
+     ssh_disconnect(s->ssh.session);
+     ssh_free(s->ssh.session);
+ 
+-- 
+2.33.0
+
