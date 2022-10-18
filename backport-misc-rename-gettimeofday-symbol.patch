@@ -1,0 +1,47 @@
+From 17aec429f539517468446191e3da91df40e352d1 Mon Sep 17 00:00:00 2001
+From: Timo Rothenpieler <timo@rothenpieler.org>
+Date: Sat, 20 Aug 2022 16:00:15 +0200
+Subject: [PATCH] misc: rename gettimeofday symbol
+
+mingw does have this function, even though it appears to be deprecated.
+So the symbol has to have a different name, or linking becomes
+impossible.
+
+Signed-off-by: Timo Rothenpieler <timo@rothenpieler.org>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+---
+ include/libssh/priv.h | 4 +++-
+ src/misc.c            | 2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/include/libssh/priv.h b/include/libssh/priv.h
+index ad932d2f..bab761b0 100644
+--- a/include/libssh/priv.h
++++ b/include/libssh/priv.h
+@@ -152,7 +152,9 @@ char *strndup(const char *s, size_t n);
+ # endif /* _MSC_VER */
+ 
+ struct timeval;
+-int gettimeofday(struct timeval *__p, void *__t);
++int ssh_gettimeofday(struct timeval *__p, void *__t);
++
++#define gettimeofday ssh_gettimeofday
+ 
+ #define _XCLOSESOCKET closesocket
+ 
+diff --git a/src/misc.c b/src/misc.c
+index 81b23f25..e6264101 100644
+--- a/src/misc.c
++++ b/src/misc.c
+@@ -160,7 +160,7 @@ int ssh_dir_writeable(const char *path)
+ #define SSH_USEC_IN_SEC         1000000LL
+ #define SSH_SECONDS_SINCE_1601  11644473600LL
+ 
+-int gettimeofday(struct timeval *__p, void *__t) {
++int ssh_gettimeofday(struct timeval *__p, void *__t) {
+   union {
+     unsigned long long ns100; /* time since 1 Jan 1601 in 100ns units */
+     FILETIME ft;
+-- 
+2.33.0
+
