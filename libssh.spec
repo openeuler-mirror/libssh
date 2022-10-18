@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.6
-Release:        4
+Release:        5
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -18,6 +18,15 @@ Patch5:         backport-options-Parse-hostname-by-last.patch
 Patch6:         backport-torture_options-Add-test-for-in-login-name.patch
 Patch7:         backport-session-Initialize-pointers.patch
 Patch8:         backport-tests-Ensure-the-mode-of-the-created-file-is.patch
+Patch9:         backport-session-socket_callbacks.data-will-be-set-t.patch
+Patch10:        backport-config-Avoid-false-positive-report-from-Cov.patch
+Patch11:        backport-kdf-Avoid-endianess-issues.patch
+Patch12:        backport-misc-rename-gettimeofday-symbol.patch
+Patch13:        backport-misc-Fix-format-truncation-in-ssh_path_expa.patch
+Patch14:        backport-misc-Fix-expanding-port-numbers.patch
+Patch15:        backport-session-Initialize-the-port-with-the-standa.patch
+Patch16:        backport-tests-Add-test-for-expanding-port-numbers.patch
+Patch17:        backport-socket-Add-error-message-if-execv-fails.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -103,6 +112,21 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Tue Oct 18 2022 gaihuiying <eaglegai@163.com> - 0.9.6-5
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:backport some upstream patches:
+       Avoid false positive report from Coveritt CID 1470006
+       kdf: Avoid endianess issues
+       misc: Fix format truncation in ssh_path_expand_escape()
+       misc: Fix expanding port numbers
+       misc: rename gettimeofday symbol
+       session: Initialize the port with the standard port (22)
+       session->socket_callbacks.data will be set to ssh_packet_socket_callback
+       socket: Add error message if execv fails
+       tests: Add test for expanding port numbers
+
 * Thu Oct 13 2022 xinghe <xinghe2@h-partners.com> - 0.9.6-4
 - Type:bugfix
 - Id:NA

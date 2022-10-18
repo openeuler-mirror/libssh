@@ -1,0 +1,28 @@
+From af85ee8e59798e178a9b2e763eaa5e9d3124eb3b Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Thu, 11 Aug 2022 15:46:49 +0200
+Subject: [PATCH] config: Avoid false positive report from Coveritt CID 1470006
+
+Signed-off-by: Jakub Jelen <jjelen@redhat.com>
+Reviewed-by: Andreas Schneider <asn@cryptomilk.org>
+---
+ src/config.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/config.c b/src/config.c
+index 8270b3a9..bc7afcc7 100644
+--- a/src/config.c
++++ b/src/config.c
+@@ -618,7 +618,8 @@ ssh_config_parse_line(ssh_session session,
+       opcode != SOC_MATCH &&
+       opcode != SOC_INCLUDE &&
+       opcode != SOC_IDENTITY &&
+-      opcode > SOC_UNSUPPORTED) { /* Ignore all unknown types here */
++      opcode > SOC_UNSUPPORTED &&
++      opcode < SOC_MAX) { /* Ignore all unknown types here */
+       /* Skip all the options that were already applied */
+       if (seen[opcode] != 0) {
+           SAFE_FREE(x);
+-- 
+2.33.0
+

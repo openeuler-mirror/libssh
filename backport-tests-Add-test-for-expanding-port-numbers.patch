@@ -1,0 +1,47 @@
+From 8c0be750db787d70863ad3bbbc1e70e75a8e223f Mon Sep 17 00:00:00 2001
+From: Andreas Schneider <asn@cryptomilk.org>
+Date: Mon, 29 Aug 2022 10:08:58 +0200
+Subject: [PATCH] tests: Add test for expanding port numbers
+
+Signed-off-by: Andreas Schneider <asn@cryptomilk.org>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+---
+ tests/unittests/torture_misc.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/tests/unittests/torture_misc.c b/tests/unittests/torture_misc.c
+index 354f37bc..6fdf3ab5 100644
+--- a/tests/unittests/torture_misc.c
++++ b/tests/unittests/torture_misc.c
+@@ -168,17 +168,25 @@ static void torture_path_expand_tilde_unix(void **state) {
+ 
+ static void torture_path_expand_escape(void **state) {
+     ssh_session session = *state;
+-    const char *s = "%d/%h/by/%r";
++    const char *s = "%d/%h/%p/by/%r";
+     char *e;
+ 
+     session->opts.sshdir = strdup("guru");
+     session->opts.host = strdup("meditation");
++    session->opts.port = 0;
+     session->opts.username = strdup("root");
+ 
+     e = ssh_path_expand_escape(session, s);
+     assert_non_null(e);
+-    assert_string_equal(e, "guru/meditation/by/root");
+-    free(e);
++    assert_string_equal(e, "guru/meditation/22/by/root");
++    ssh_string_free_char(e);
++
++    session->opts.port = 222;
++
++    e = ssh_path_expand_escape(session, s);
++    assert_non_null(e);
++    assert_string_equal(e, "guru/meditation/222/by/root");
++    ssh_string_free_char(e);
+ }
+ 
+ static void torture_path_expand_known_hosts(void **state) {
+-- 
+2.33.0
+
