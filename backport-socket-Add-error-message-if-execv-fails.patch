@@ -1,0 +1,39 @@
+From 2546b6224223890af669c272c70ab45ec0298659 Mon Sep 17 00:00:00 2001
+From: Andreas Schneider <asn@cryptomilk.org>
+Date: Mon, 29 Aug 2022 13:32:09 +0200
+Subject: [PATCH] socket: Add error message if execv fails
+
+Signed-off-by: Andreas Schneider <asn@cryptomilk.org>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+---
+ src/socket.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/socket.c b/src/socket.c
+index bd2cd28c..525b304f 100644
+--- a/src/socket.c
++++ b/src/socket.c
+@@ -891,6 +891,7 @@ ssh_execute_command(const char *command, socket_t in, socket_t out)
+ ssh_execute_command(const char *command, socket_t in, socket_t out)
+ {
+     const char *args[] = {"/bin/sh", "-c", command, NULL};
++    int rc;
+     /* Prepare /dev/null socket for the stderr redirection */
+     int devnull = open("/dev/null", O_WRONLY);
+     if (devnull == -1) {
+@@ -915,7 +916,11 @@ ssh_execute_command(const char *command, socket_t in, socket_t out)
+     dup2(devnull, STDERR_FILENO);
+     close(in);
+     close(out);
+-    execv(args[0], (char * const *)args);
++    rc = execv(args[0], (char * const *)args);
++    if (rc < 0) {
++        SSH_LOG(SSH_LOG_WARN, "Failed to execute command %s: %s",
++                command, strerror(errno));
++    }
+     exit(1);
+ }
+ 
+-- 
+2.33.0
+

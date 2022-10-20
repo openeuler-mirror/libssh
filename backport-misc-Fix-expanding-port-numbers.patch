@@ -1,0 +1,27 @@
+From 648baf0f3c567280e6decfa49ebc6fa01b635bdd Mon Sep 17 00:00:00 2001
+From: Andreas Schneider <asn@cryptomilk.org>
+Date: Mon, 29 Aug 2022 10:03:40 +0200
+Subject: [PATCH] misc: Fix expanding port numbers
+
+Signed-off-by: Andreas Schneider <asn@cryptomilk.org>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+---
+ src/misc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/misc.c b/src/misc.c
+index a2fdf31a..11a7479c 100644
+--- a/src/misc.c
++++ b/src/misc.c
+@@ -1237,7 +1237,7 @@ char *ssh_path_expand_escape(ssh_session session, const char *s)
+                 x = strdup(session->opts.username);
+                 break;
+             case 'p':
+-                if (session->opts.port > 0) {
++                {
+                   char tmp[6];
+ 
+                   snprintf(tmp, sizeof(tmp), "%hu",
+-- 
+2.33.0
+

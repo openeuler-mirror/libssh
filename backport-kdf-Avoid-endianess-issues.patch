@@ -1,0 +1,125 @@
+From 915df080588ce815c80da804780438ce9b2ac390 Mon Sep 17 00:00:00 2001
+From: Andreas Schneider <asn@cryptomilk.org>
+Date: Wed, 7 Sep 2022 12:40:00 +0200
+Subject: [PATCH] kdf: Avoid endianess issues
+
+The key_type is only a letter, if we use and `int` and then cast it to
+(const char *) we will end up with a 0 value on big endian.
+
+Signed-off-by: Andreas Schneider <asn@cryptomilk.org>
+Reviewed-by: Anderson Toshiyuki Sasaki <ansasaki@redhat.com>
+---
+ include/libssh/crypto.h  | 2 +-
+ include/libssh/wrapper.h | 2 +-
+ src/kdf.c                | 5 ++---
+ src/libcrypto.c          | 4 ++--
+ src/libgcrypt.c          | 2 +-
+ src/libmbedcrypto.c      | 2 +-
+ 6 files changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/include/libssh/crypto.h b/include/libssh/crypto.h
+index f40d76b9..1d73613b 100644
+--- a/include/libssh/crypto.h
++++ b/include/libssh/crypto.h
+@@ -219,7 +219,7 @@ struct ssh_cipher_struct {
+ const struct ssh_cipher_struct *ssh_get_chacha20poly1305_cipher(void);
+ int sshkdf_derive_key(struct ssh_crypto_struct *crypto,
+                       unsigned char *key, size_t key_len,
+-                      int key_type, unsigned char *output,
++                      uint8_t key_type, unsigned char *output,
+                       size_t requested_len);
+ 
+ #endif /* _CRYPTO_H_ */
+diff --git a/include/libssh/wrapper.h b/include/libssh/wrapper.h
+index fd57cdb1..f4a33d2d 100644
+--- a/include/libssh/wrapper.h
++++ b/include/libssh/wrapper.h
+@@ -103,7 +103,7 @@ size_t hmac_digest_len(enum ssh_hmac_e type);
+ 
+ int ssh_kdf(struct ssh_crypto_struct *crypto,
+             unsigned char *key, size_t key_len,
+-            int key_type, unsigned char *output,
++            uint8_t key_type, unsigned char *output,
+             size_t requested_len);
+ 
+ int crypt_set_algorithms_client(ssh_session session);
+diff --git a/src/kdf.c b/src/kdf.c
+index a88c92f8..44f06631 100644
+--- a/src/kdf.c
++++ b/src/kdf.c
+@@ -116,14 +116,13 @@ static void ssh_mac_final(unsigned char *md, ssh_mac_ctx ctx)
+ 
+ int sshkdf_derive_key(struct ssh_crypto_struct *crypto,
+                       unsigned char *key, size_t key_len,
+-                      int key_type, unsigned char *output,
++                      uint8_t key_type, unsigned char *output,
+                       size_t requested_len)
+ {
+     /* Can't use VLAs with Visual Studio, so allocate the biggest
+      * digest buffer we can possibly need */
+     unsigned char digest[DIGEST_MAX_LEN];
+     size_t output_len = crypto->digest_len;
+-    char letter = key_type;
+     ssh_mac_ctx ctx;
+ 
+     if (DIGEST_MAX_LEN < crypto->digest_len) {
+@@ -137,7 +136,7 @@ int sshkdf_derive_key(struct ssh_crypto_struct *crypto,
+ 
+     ssh_mac_update(ctx, key, key_len);
+     ssh_mac_update(ctx, crypto->secret_hash, crypto->digest_len);
+-    ssh_mac_update(ctx, &letter, 1);
++    ssh_mac_update(ctx, &key_type, 1);
+     ssh_mac_update(ctx, crypto->session_id, crypto->session_id_len);
+     ssh_mac_final(digest, ctx);
+ 
+diff --git a/src/libcrypto.c b/src/libcrypto.c
+index 5fef5209..468b63f0 100644
+--- a/src/libcrypto.c
++++ b/src/libcrypto.c
+@@ -214,7 +214,7 @@ static const char *sshkdf_digest_to_md(enum ssh_kdf_digest digest_type)
+ 
+ int ssh_kdf(struct ssh_crypto_struct *crypto,
+             unsigned char *key, size_t key_len,
+-            int key_type, unsigned char *output,
++            uint8_t key_type, unsigned char *output,
+             size_t requested_len)
+ {
+     EVP_KDF_CTX *ctx = EVP_KDF_CTX_new_id(EVP_KDF_SSHKDF);
+@@ -330,7 +330,7 @@ out:
+ #else
+ int ssh_kdf(struct ssh_crypto_struct *crypto,
+             unsigned char *key, size_t key_len,
+-            int key_type, unsigned char *output,
++            uint8_t key_type, unsigned char *output,
+             size_t requested_len)
+ {
+     return sshkdf_derive_key(crypto, key, key_len,
+diff --git a/src/libgcrypt.c b/src/libgcrypt.c
+index b8b86593..da5588ad 100644
+--- a/src/libgcrypt.c
++++ b/src/libgcrypt.c
+@@ -124,7 +124,7 @@ void evp_final(EVPCTX ctx, unsigned char *md, unsigned int *mdlen)
+ 
+ int ssh_kdf(struct ssh_crypto_struct *crypto,
+             unsigned char *key, size_t key_len,
+-            int key_type, unsigned char *output,
++            uint8_t key_type, unsigned char *output,
+             size_t requested_len)
+ {
+     return sshkdf_derive_key(crypto, key, key_len,
+diff --git a/src/libmbedcrypto.c b/src/libmbedcrypto.c
+index c8137ce0..6d84bd51 100644
+--- a/src/libmbedcrypto.c
++++ b/src/libmbedcrypto.c
+@@ -127,7 +127,7 @@ void evp_final(EVPCTX ctx, unsigned char *md, unsigned int *mdlen)
+ 
+ int ssh_kdf(struct ssh_crypto_struct *crypto,
+             unsigned char *key, size_t key_len,
+-            int key_type, unsigned char *output,
++            uint8_t key_type, unsigned char *output,
+             size_t requested_len)
+ {
+     return sshkdf_derive_key(crypto, key, key_len,
+-- 
+2.33.0
+
