@@ -1,0 +1,29 @@
+From 0799775185c4d9a26bbf074f11bf17aa5b055b3f Mon Sep 17 00:00:00 2001
+From: renmingshuai <renmingshuai@huawei.com>
+Date: Thu, 18 Aug 2022 20:00:25 +0800
+Subject: [PATCH] session->socket_callbacks.data will be set to
+ ssh_packet_socket_callback
+
+in ssh_packet_register_socket_callback. Here is redundant.
+
+Signed-off-by: renmingshuai <renmingshuai@huawei.com>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+---
+ src/server.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/server.c b/src/server.c
+index e33c9366..04949a94 100644
+--- a/src/server.c
++++ b/src/server.c
+@@ -361,7 +361,6 @@ static void ssh_server_connection_callback(ssh_session session){
+             }
+ 
+             /* from now, the packet layer is handling incoming packets */
+-            session->socket_callbacks.data=ssh_packet_socket_callback;
+             ssh_packet_register_socket_callback(session, session->socket);
+ 
+             ssh_packet_set_default_callbacks(session);
+-- 
+2.33.0
+
