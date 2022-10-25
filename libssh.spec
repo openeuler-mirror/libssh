@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.4
-Release:        6
+Release:        7
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -20,6 +20,7 @@ Patch8:         backport-auth-Fix-error-returned-in-ssh_userauth_try_publicke.pa
 Patch9:         backport-client-Do-not-close-the-socket-if-it-was-set-via-opt.patch
 Patch10:        backport-libsshpp-Fix-openForward-to-not-set-sourcehost-to-NU.patch
 Patch11:        backport-sftp-fix-the-length-calculation-of-packet-in-sftp_wr.patch
+Patch12:        backport-tests-Fix-running-timeout-tests-on-gitlab-windows-ru.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -104,6 +105,12 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Tue Oct 25 2022 xinghe <xinghe2@h-partners.com> - 0.9.4-7
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:tests: Fix running timeout tests on gitlab windows runners
+
 * Fri Sep 02 2022 gaihuiying <eaglegai@163.com> - 0.9.4-6
 - Type:bugfix
 - Id:NA
