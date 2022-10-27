@@ -1,0 +1,32 @@
+From d2a41e606bbd6074b88be46f7b0fd3cd3f7d5536 Mon Sep 17 00:00:00 2001
+From: Andreas Schneider <asn@cryptomilk.org>
+Date: Wed, 26 May 2021 17:06:42 +0200
+Subject: tests: Fix running timeout tests on gitlab windows runners
+
+Signed-off-by: Andreas Schneider <asn@cryptomilk.org>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+
+Conflict: NA
+Reference: https://git.libssh.org/projects/libssh.git/patch/tests/unittests/torture_misc.c?id=d2a41e606bbd6074b88be46f7b0fd3cd3f7d5536
+---
+ tests/unittests/torture_misc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+(limited to 'tests/unittests/torture_misc.c')
+
+diff --git a/tests/unittests/torture_misc.c b/tests/unittests/torture_misc.c
+index 2d2d6860..c7b99b5d 100644
+--- a/tests/unittests/torture_misc.c
++++ b/tests/unittests/torture_misc.c
+@@ -209,7 +209,8 @@ static void torture_timeout_elapsed(void **state){
+     struct ssh_timestamp ts;
+     (void) state;
+     ssh_timestamp_init(&ts);
+-    usleep(50000);
++    usleep(30000);
++
+     assert_true(ssh_timeout_elapsed(&ts,25));
+     assert_false(ssh_timeout_elapsed(&ts,30000));
+     assert_false(ssh_timeout_elapsed(&ts,75));
+-- 
+cgit v1.2.3
