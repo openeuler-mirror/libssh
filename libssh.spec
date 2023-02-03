@@ -1,6 +1,6 @@
 Name:           libssh
-Version:        0.9.6
-Release:        5
+Version:        0.10.4
+Release:        1
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -8,25 +8,6 @@ URL:            http://www.libssh.org
 Source0:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz
 Source1:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz.asc
 Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D.gpg#/%{name}.keyring
-
-Patch0:         backport-Add-errno-reset-with-strtoul-call.patch
-Patch1:         backport-client-Do-not-close-the-socket-if-it-was-set-via-opt.patch
-Patch2:         backport-libsshpp-Fix-openForward-to-not-set-sourcehost-to-NU.patch
-Patch3:         backport-auth-Fix-error-returned-in-ssh_userauth_try_publicke.patch
-Patch4:         backport-sftp-fix-the-length-calculation-of-packet-in-sftp_wr.patch
-Patch5:         backport-options-Parse-hostname-by-last.patch
-Patch6:         backport-torture_options-Add-test-for-in-login-name.patch
-Patch7:         backport-session-Initialize-pointers.patch
-Patch8:         backport-tests-Ensure-the-mode-of-the-created-file-is.patch
-Patch9:         backport-session-socket_callbacks.data-will-be-set-t.patch
-Patch10:        backport-config-Avoid-false-positive-report-from-Cov.patch
-Patch11:        backport-kdf-Avoid-endianess-issues.patch
-Patch12:        backport-misc-rename-gettimeofday-symbol.patch
-Patch13:        backport-misc-Fix-format-truncation-in-ssh_path_expa.patch
-Patch14:        backport-misc-Fix-expanding-port-numbers.patch
-Patch15:        backport-session-Initialize-the-port-with-the-standa.patch
-Patch16:        backport-tests-Add-test-for-expanding-port-numbers.patch
-Patch17:        backport-socket-Add-error-message-if-execv-fails.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -109,9 +90,15 @@ popd
 
 %files help
 %defattr(-,root,root)
-%doc ChangeLog README
+%doc CHANGELOG README
 
 %changelog
+* Thu Oct 20 2022 zengweifeng<zwfeng@huawei.com> - 0.10.4-1
+- Type:requirement
+- Id:NA
+- SUG:NA
+- DESC:update to 0.10.4
+
 * Thu Oct 20 2022 zengweifeng<zwfeng@huawei.com> - 0.9.6-5
 - Type:bugfix
 - Id:NA
