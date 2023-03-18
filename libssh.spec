@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.10.4
-Release:        1
+Release:        2
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -8,6 +8,9 @@ URL:            http://www.libssh.org
 Source0:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz
 Source1:        https://www.libssh.org/files/0.9/%{name}-%{version}.tar.xz.asc
 Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D.gpg#/%{name}.keyring
+
+Patch0:         backport-config-Escape-brackets-in-ProxyCommand-build-from.patch
+Patch1:         backport-packet-do-not-enqueue-outgoing-packets-after-sending.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -93,6 +96,13 @@ popd
 %doc CHANGELOG README
 
 %changelog
+* Sat Mar 18 2023 renmingshuai <renmingshuai@huawei.com> - 0.10.4-2
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:config: Escape brackets in ProxyCommand build from ProxyJump
+       packet: do not enqueue outgoing packets after sending
+
 * Thu Oct 20 2022 zengweifeng<zwfeng@huawei.com> - 0.10.4-1
 - Type:requirement
 - Id:NA
