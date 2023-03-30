@@ -1,0 +1,93 @@
+From bccb8513fa4a836aef0519d65eb33bb212606fe1 Mon Sep 17 00:00:00 2001
+From: Thomas Baag <libssh-git@spam.b2ag.de>
+Date: Wed, 21 Sep 2022 20:55:27 +0200
+Subject: [PATCH] config: Escape brackets in ProxyCommand build from
+ProxyJump
+
+Missing escaping results in syntax errors in Zsh shell because of square
+brackets getting interpreted as being a pattern for globbing.
+
+Signed-off-by: Thomas Baag <libssh-git@spam.b2ag.de>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+
+Conflict:NA
+Reference:https://git.libssh.org/projects/libssh.git/commit?id=bccb8513fa
+---
+ src/config.c                     |  2 +-
+ tests/unittests/torture_config.c | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/config.c b/src/config.c
+index d34ba5f..54a1a6e 100644
+--- a/src/config.c
++++ b/src/config.c
+@@ -351,7 +351,7 @@ ssh_config_parse_proxy_jump(ssh_session session, const char *s, bool do_parsing)
+     if (hostname != NULL && do_parsing) {
+         char com[512] = {0};
+ 
+-        rv = snprintf(com, sizeof(com), "ssh%s%s%s%s%s%s -W [%%h]:%%p %s",
++        rv = snprintf(com, sizeof(com), "ssh%s%s%s%s%s%s -W '[%%h]:%%p' %s",
+                       username ? " -l " : "",
+                       username ? username : "",
+                       port ? " -p " : "",
+diff --git a/tests/unittests/torture_config.c b/tests/unittests/torture_config.c
+index f91112a..b368a72 100644
+--- a/tests/unittests/torture_config.c
++++ b/tests/unittests/torture_config.c
+@@ -615,7 +615,7 @@ static void torture_config_proxyjump(void **state) {
+     ssh_options_set(session, SSH_OPTIONS_HOST, "simple");
+     ret = ssh_config_parse_file(session, LIBSSH_TESTCONFIG11);
+     assert_ssh_return_code(session, ret);
+-    assert_string_equal(session->opts.ProxyCommand, "ssh -W [%h]:%p jumpbox");
++    assert_string_equal(session->opts.ProxyCommand, "ssh -W '[%h]:%p' jumpbox");
+ 
+     /* With username */
+     torture_reset_config(session);
+@@ -623,7 +623,7 @@ static void torture_config_proxyjump(void **state) {
+     ret = ssh_config_parse_file(session, LIBSSH_TESTCONFIG11);
+     assert_ssh_return_code(session, ret);
+     assert_string_equal(session->opts.ProxyCommand,
+-                        "ssh -l user -W [%h]:%p jumpbox");
++                        "ssh -l user -W '[%h]:%p' jumpbox");
+ 
+     /* With port */
+     torture_reset_config(session);
+@@ -631,7 +631,7 @@ static void torture_config_proxyjump(void **state) {
+     ret = ssh_config_parse_file(session, LIBSSH_TESTCONFIG11);
+     assert_ssh_return_code(session, ret);
+     assert_string_equal(session->opts.ProxyCommand,
+-                        "ssh -p 2222 -W [%h]:%p jumpbox");
++                        "ssh -p 2222 -W '[%h]:%p' jumpbox");
+ 
+     /* Two step jump */
+     torture_reset_config(session);
+@@ -639,7 +639,7 @@ static void torture_config_proxyjump(void **state) {
+     ret = ssh_config_parse_file(session, LIBSSH_TESTCONFIG11);
+     assert_ssh_return_code(session, ret);
+     assert_string_equal(session->opts.ProxyCommand,
+-                        "ssh -l u1 -p 222 -J u2@second:33 -W [%h]:%p first");
++                        "ssh -l u1 -p 222 -J u2@second:33 -W '[%h]:%p' first");
+ 
+     /* none */
+     torture_reset_config(session);
+@@ -661,7 +661,7 @@ static void torture_config_proxyjump(void **state) {
+     ret = ssh_config_parse_file(session, LIBSSH_TESTCONFIG11);
+     assert_ssh_return_code(session, ret);
+     assert_string_equal(session->opts.ProxyCommand,
+-                        "ssh -W [%h]:%p jumpbox");
++                        "ssh -W '[%h]:%p' jumpbox");
+ 
+     /* IPv6 address */
+     torture_reset_config(session);
+@@ -669,7 +669,7 @@ static void torture_config_proxyjump(void **state) {
+     ret = ssh_config_parse_file(session, LIBSSH_TESTCONFIG11);
+     assert_ssh_return_code(session, ret);
+     assert_string_equal(session->opts.ProxyCommand,
+-                        "ssh -W [%h]:%p 2620:52:0::fed");
++                        "ssh -W '[%h]:%p' 2620:52:0::fed");
+ 
+     /* Try to create some invalid configurations */
+     /* Non-numeric port */
+-- 
+2.23.0
+

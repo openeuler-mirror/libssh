@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.6
-Release:        5
+Release:        6
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -27,6 +27,8 @@ Patch14:        backport-misc-Fix-expanding-port-numbers.patch
 Patch15:        backport-session-Initialize-the-port-with-the-standa.patch
 Patch16:        backport-tests-Add-test-for-expanding-port-numbers.patch
 Patch17:        backport-socket-Add-error-message-if-execv-fails.patch
+Patch18:        backport-config-Escape-brackets-in-ProxyCommand-build-from.patch
+Patch19:        backport-packet-do-not-enqueue-outgoing-packets-after-sending.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -112,6 +114,13 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Tue Mar 28 2023 renmingshuai <renmingshuai@huawei.com> - 0.9.6-6
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:config: Escape brackets in ProxyCommand build
+       packet: do not enqueue outgoing packets
+
 * Tue Oct 18 2022 seuzw <930zhaowei@163.com> - 0.9.6-5
 - Type:bugfix
 - Id:NA
