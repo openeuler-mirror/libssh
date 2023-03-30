@@ -1,0 +1,58 @@
+From 346e6db31824571727c0fb76bb5747d7e9a28f89 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Carlos=20Mart=C3=ADn=20Nieto?= <carlosmn@github.com>
+Date: Wed, 7 Sep 2022 15:26:01 +0200
+Subject: [PATCH] packet: do not enqueue outgoing packets after sending
+ SSH2_MSG_NEWKEYS
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When we decide we need to rekey, we enqueue any further packets until we've sent
+our SSH2_MSG_NEWKEYS message, after which we dequeue these packets and send them
+to the other side. This enqueueing is done based on ssh_packet_in_rekey checking
+the session flags and whether DH handshake state is marked as finished.
+
+However, the handshake state is not reset to DH_STATE_FINISHED until the other
+side has sent us their new keys. This leaves a gap between sending our new keys
+and receiving the other side's new keys where we would still decide to enqueue a
+packet.
+
+These enqueued packets will not be dequeued as we've already sent our new keys.
+Once we've received the other side's new keys, we'll go back to a finished
+handshake and we will send out our caller's new data, skipping however much data
+we've enqueued.
+
+Fix this by changing ssh_packet_in_rekey to return false once we've sent our new
+keys.
+
+Signed-off-by: Carlos Martín Nieto <carlosmn@github.com>
+Reviewed-by: Jakub Jelen <jjelen@redhat.com>
+
+Conflict:NA
+Reference:https://git.libssh.org/projects/libssh.git/commit?id=346e6db318
+---
+ src/packet.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/packet.c b/src/packet.c
+index f9d37dea..353b04e1 100644
+--- a/src/packet.c
++++ b/src/packet.c
+@@ -1755,10 +1755,12 @@ static bool
+ ssh_packet_in_rekey(ssh_session session)
+ {
+     /* We know we are rekeying if we are authenticated and the DH
+-     * status is not finished
++     * status is not finished, but we only queue packets until we've
++     * sent our NEWKEYS.
+      */
+     return (session->flags & SSH_SESSION_FLAG_AUTHENTICATED) &&
+-           (session->dh_handshake_state != DH_STATE_FINISHED);
++           (session->dh_handshake_state != DH_STATE_FINISHED) &&
++           (session->dh_handshake_state != DH_STATE_NEWKEYS_SENT);
+ }
+ 
+ int ssh_packet_send(ssh_session session)
+-- 
+2.23.0
+
