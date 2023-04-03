@@ -1,0 +1,170 @@
+From 22f0f0dd60907ee7bcf30a5e32638ef12b8f0457 Mon Sep 17 00:00:00 2001
+From: Jakub Jelen <jjelen@redhat.com>
+Date: Wed, 12 Oct 2022 13:03:45 +0200
+Subject: [PATCH 1/1] examples: Fix build issue with new clang 15
+
+The error was  the following
+
+/builds/libssh/libssh-mirror/examples/sshnetcat.c:241:18: error: a function
+declaration without a prototype is deprecated in all versions of C
+[-Werror,-Wstrict-prototypes]
+void cleanup_pcap(){
+                 ^
+                  void
+
+and similar
+
+Signed-off-by: Jakub Jelen <jjelen@redhat.com>
+Reviewed-by: Anderson Toshiyuki Sasaki <ansasaki@redhat.com>
+---
+ examples/ssh_X11_client.c |  2 +-
+ examples/sshnetcat.c      |  5 +++--
+ src/init.c                |  2 +-
+ tests/pkd/pkd_keyutil.c   | 24 ++++++++++++------------
+ 4 files changed, 17 insertions(+), 16 deletions(-)
+
+diff --git a/examples/ssh_X11_client.c b/examples/ssh_X11_client.c
+index 369b9b4a..6e785ee2 100644
+--- a/examples/ssh_X11_client.c
++++ b/examples/ssh_X11_client.c
+@@ -453,7 +453,7 @@ connect_local_xsocket(int display_number)
+ 
+ 
+ static int
+-x11_connect_display()
++x11_connect_display(void)
+ {
+ 	int display_number;
+ 	const char *display = NULL;
+diff --git a/examples/sshnetcat.c b/examples/sshnetcat.c
+index 9bc5d52e..59b0a289 100644
+--- a/examples/sshnetcat.c
++++ b/examples/sshnetcat.c
+@@ -238,9 +238,10 @@ void set_pcap(ssh_session session){
+ }
+ 
+ void cleanup_pcap(void);
+-void cleanup_pcap(){
++void cleanup_pcap(void)
++{
+ 	ssh_pcap_file_free(pcap);
+-	pcap=NULL;
++	pcap = NULL;
+ }
+ #endif
+ 
+diff --git a/src/init.c b/src/init.c
+index 7f184b9c..36911a42 100644
+--- a/src/init.c
++++ b/src/init.c
+@@ -278,7 +278,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL,
+  *
+  * @see ssh_init()
+  */
+-bool is_ssh_initialized() {
++bool is_ssh_initialized(void) {
+ 
+     bool is_initialized = false;
+ 
+diff --git a/tests/pkd/pkd_keyutil.c b/tests/pkd/pkd_keyutil.c
+index 3991bcbb..533d2788 100644
+--- a/tests/pkd/pkd_keyutil.c
++++ b/tests/pkd/pkd_keyutil.c
+@@ -22,7 +22,7 @@
+ #include "pkd_keyutil.h"
+ #include "pkd_util.h"
+ 
+-void setup_rsa_key() {
++void setup_rsa_key(void) {
+     int rc = 0;
+     if (access(LIBSSH_RSA_TESTKEY, F_OK) != 0) {
+         rc = system_checked(OPENSSH_KEYGEN " -t rsa -q -N \"\" -f "
+@@ -31,7 +31,7 @@ void setup_rsa_key() {
+     assert_int_equal(rc, 0);
+ }
+ 
+-void setup_ed25519_key() {
++void setup_ed25519_key(void) {
+     int rc = 0;
+     if (access(LIBSSH_ED25519_TESTKEY, F_OK) != 0) {
+         rc = system_checked(OPENSSH_KEYGEN " -t ed25519 -q -N \"\" -f "
+@@ -41,7 +41,7 @@ void setup_ed25519_key() {
+ }
+ 
+ #ifdef HAVE_DSA
+-void setup_dsa_key() {
++void setup_dsa_key(void) {
+     int rc = 0;
+     if (access(LIBSSH_DSA_TESTKEY, F_OK) != 0) {
+         rc = system_checked(OPENSSH_KEYGEN " -t dsa -q -N \"\" -f "
+@@ -51,7 +51,7 @@ void setup_dsa_key() {
+ }
+ #endif
+ 
+-void setup_ecdsa_keys() {
++void setup_ecdsa_keys(void) {
+     int rc = 0;
+ 
+     if (access(LIBSSH_ECDSA_256_TESTKEY, F_OK) != 0) {
+@@ -71,27 +71,27 @@ void setup_ecdsa_keys() {
+     }
+ }
+ 
+-void cleanup_rsa_key() {
++void cleanup_rsa_key(void) {
+     cleanup_key(LIBSSH_RSA_TESTKEY);
+ }
+ 
+-void cleanup_ed25519_key() {
++void cleanup_ed25519_key(void) {
+     cleanup_key(LIBSSH_ED25519_TESTKEY);
+ }
+ 
+ #ifdef HAVE_DSA
+-void cleanup_dsa_key() {
++void cleanup_dsa_key(void) {
+     cleanup_key(LIBSSH_DSA_TESTKEY);
+ }
+ #endif
+ 
+-void cleanup_ecdsa_keys() {
++void cleanup_ecdsa_keys(void) {
+     cleanup_key(LIBSSH_ECDSA_256_TESTKEY);
+     cleanup_key(LIBSSH_ECDSA_384_TESTKEY);
+     cleanup_key(LIBSSH_ECDSA_521_TESTKEY);
+ }
+ 
+-void setup_openssh_client_keys() {
++void setup_openssh_client_keys(void) {
+     int rc = 0;
+ 
+     if (access(OPENSSH_CA_TESTKEY, F_OK) != 0) {
+@@ -184,7 +184,7 @@ void setup_openssh_client_keys() {
+     }
+ }
+ 
+-void cleanup_openssh_client_keys() {
++void cleanup_openssh_client_keys(void) {
+     cleanup_key(OPENSSH_CA_TESTKEY);
+     cleanup_key(OPENSSH_RSA_TESTKEY);
+     cleanup_file(OPENSSH_RSA_TESTKEY "-sha256-cert.pub");
+@@ -199,7 +199,7 @@ void cleanup_openssh_client_keys() {
+     }
+ }
+ 
+-void setup_dropbear_client_rsa_key() {
++void setup_dropbear_client_rsa_key(void) {
+     int rc = 0;
+     if (access(DROPBEAR_RSA_TESTKEY, F_OK) != 0) {
+         rc = system_checked(DROPBEAR_KEYGEN " -t rsa -f "
+@@ -208,6 +208,6 @@ void setup_dropbear_client_rsa_key() {
+     assert_int_equal(rc, 0);
+ }
+ 
+-void cleanup_dropbear_client_rsa_key() {
++void cleanup_dropbear_client_rsa_key(void) {
+     unlink(DROPBEAR_RSA_TESTKEY);
+ }
+-- 
+2.33.0
+
