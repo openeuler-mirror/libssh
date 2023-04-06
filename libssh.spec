@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.10.4
-Release:        2
+Release:        3
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -11,6 +11,7 @@ Source2:        https://cryptomilk.org/gpgkey-8DFF53E18F2ABC8D8F3C92237EE0FC4DCC
 
 Patch0:         backport-config-Escape-brackets-in-ProxyCommand-build-from.patch
 Patch1:         backport-packet-do-not-enqueue-outgoing-packets-after-sending.patch
+Patch2:         backport-examples-Fix-build-issue-with-new-clang-15.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -96,6 +97,12 @@ popd
 %doc CHANGELOG README
 
 %changelog
+* Mon Apr 3 2023 Chenxi Mao <chenxi.mao@suse.com> - 0.10.4-3
+- Type:bugfix
+- Id:NA
+- SUG:NA
+- DESC:Backport patches to fix build error if compiler switch to clang.
+
 * Sat Mar 18 2023 renmingshuai <renmingshuai@huawei.com> - 0.10.4-2
 - Type:bugfix
 - Id:NA
