@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.4
-Release:        7
+Release:        8
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -21,6 +21,17 @@ Patch9:         backport-client-Do-not-close-the-socket-if-it-was-set-via-opt.pa
 Patch10:        backport-libsshpp-Fix-openForward-to-not-set-sourcehost-to-NU.patch
 Patch11:        backport-sftp-fix-the-length-calculation-of-packet-in-sftp_wr.patch
 Patch12:        backport-tests-Fix-running-timeout-tests-on-gitlab-windows-ru.patch
+Patch13:        backport-0001-CVE-2023-1667-packet_cb-Log-more-verbose-error-if-si.patch
+Patch14:        backport-0002-CVE-2023-1667-packet-Do-not-allow-servers-to-initiat.patch
+Patch15:        backport-0003-CVE-2023-1667-kex-Remove-needless-function-argument.patch
+Patch16:        backport-0004-CVE-2023-1667-kex-Factor-out-the-kex-mapping-to-inte.patch
+Patch17:        backport-0005-CVE-2023-1667-dh-Expose-the-callback-cleanup-functio.patch
+Patch18:        backport-0006-CVE-2023-1667-kex-Correctly-handle-last-fields-of-KE.patch
+Patch19:        backport-0007-CVE-2023-1667-kex-Add-support-for-sending-first_kex_.patch
+Patch20:        backport-0008-CVE-2023-1667-tests-Client-coverage-for-key-exchange.patch
+Patch21:        backport-0009-CVE-2023-1667-tests-Send-a-bit-more-to-make-sure-rek.patch 
+Patch22:        backport-0001-CVE-2023-2283-pki_crypto-Fix-possible-authentication.patch
+Patch23:        backport-0002-CVE-2023-2283-pki_crypto-Remove-unnecessary-NUL.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -105,6 +116,12 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Fri May 19 2023 renmingshuai <renmingshuai@huawei.com> - 0.9.4-8
+- Type:CVE
+- Id:CVE-2023-1667,CVE-2023-2283
+- SUG:NA
+- DESC:fix CVE-2023-1667 and CVE-2023-2283
+
 * Tue Oct 25 2022 xinghe <xinghe2@h-partners.com> - 0.9.4-7
 - Type:bugfix
 - Id:NA
