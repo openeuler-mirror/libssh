@@ -1,6 +1,6 @@
 Name:           libssh
 Version:        0.9.6
-Release:        6
+Release:        7
 Summary:        A library implementing the SSH protocol
 License:        LGPLv2+
 URL:            http://www.libssh.org
@@ -29,6 +29,17 @@ Patch16:        backport-tests-Add-test-for-expanding-port-numbers.patch
 Patch17:        backport-socket-Add-error-message-if-execv-fails.patch
 Patch18:        backport-config-Escape-brackets-in-ProxyCommand-build-from.patch
 Patch19:        backport-packet-do-not-enqueue-outgoing-packets-after-sending.patch
+Patch20:        backport-0001-CVE-2023-1667-packet_cb-Log-more-verbose-error-if-si.patch
+Patch21:        backport-0002-CVE-2023-1667-packet-Do-not-allow-servers-to-initiat.patch
+Patch22:        backport-0003-CVE-2023-1667-kex-Remove-needless-function-argument.patch
+Patch23:        backport-0004-CVE-2023-1667-kex-Factor-out-the-kex-mapping-to-inte.patch
+Patch24:        backport-0005-CVE-2023-1667-dh-Expose-the-callback-cleanup-functio.patch
+Patch25:        backport-0006-CVE-2023-1667-kex-Correctly-handle-last-fields-of-KE.patch
+Patch26:        backport-0007-CVE-2023-1667-kex-Add-support-for-sending-first_kex_.patch
+Patch27:        backport-0008-CVE-2023-1667-tests-Client-coverage-for-key-exchange.patch
+Patch28:        backport-0009-CVE-2023-1667-tests-Send-a-bit-more-to-make-sure-rek.patch
+Patch29:        backport-0001-CVE-2023-2283-pki_crypto-Fix-possible-authentication.patch
+Patch30:        backport-0002-CVE-2023-2283-pki_crypto-Remove-unnecessary-NUL.patch
 
 BuildRequires:  cmake gcc-c++ gnupg2 openssl-devel pkgconfig zlib-devel
 BuildRequires:  krb5-devel libcmocka-devel openssh-clients openssh-server
@@ -114,6 +125,12 @@ popd
 %doc ChangeLog README
 
 %changelog
+* Fri May 19 2023 renmingshuai <renmingshuai@huawei.com> - 0.9.6-7
+- Type:CVE
+- Id:CVE-2023-1667,CVE-2023-2283
+- SUG:NA
+- DESC:fix CVE-2023-1667 and CVE-2023-2283
+
 * Tue Mar 28 2023 renmingshuai <renmingshuai@huawei.com> - 0.9.6-6
 - Type:bugfix
 - Id:NA
